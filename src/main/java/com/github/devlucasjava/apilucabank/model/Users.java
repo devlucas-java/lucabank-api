@@ -42,7 +42,7 @@ public class Users implements UserDetails {
     @Column(nullable = false)
     private String passport;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Account account;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Builder
 @Data
@@ -17,6 +18,9 @@ import java.util.List;
 @AllArgsConstructor
 @Schema(description = "Account response")
 public class AccountResponse {
+
+    @Schema(description = "Unique identifier of the account", example = "550e8400-e29b-41d4-a716-446655440000")
+    private UUID id;
 
     @Schema(description = "List of transactions")
     private List<Transactions> transactionsList;
@@ -27,9 +31,12 @@ public class AccountResponse {
     @Schema(description = "Maximum amount of money you can transfer in a transaction", example = "1000")
     private BigDecimal maxAmountTransaction;
 
-    @Schema(description = "User is blocked?", example = "false")
-    private boolean isBlockef;
+    @Schema(description = "Account is blocked?", example = "false")
+    private boolean isBlocke;
 
-    @Schema(description = "User role", example = "2026-02-27T17:50:18")
+    @Schema(description = "Date blocked", example = "2026-02-27T17:50:18")
     private LocalDateTime blockedDate;
+
+    @Schema(description = "User who owns the account", example = "2026-02-27T17:50:18")
+    private UUID userId;
 }

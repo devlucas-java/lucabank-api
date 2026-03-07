@@ -1,6 +1,6 @@
 package com.github.devlucasjava.apilucabank.service;
 
-import com.github.devlucasjava.apilucabank.dto.mapper.UsersMapper;
+import com.github.devlucasjava.apilucabank.dto.mapper.UserMapper;
 import com.github.devlucasjava.apilucabank.dto.response.UsersResponse;
 import com.github.devlucasjava.apilucabank.exception.ResourceNotFoundException;
 import com.github.devlucasjava.apilucabank.model.Users;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class UsersService {
 
     private final UsersRepository usersRepository;
-    private final UsersMapper usersMapper;
+    private final UserMapper userMapper;
 
     public UsersResponse getAuthenticatedUser(Users user) {
         Users foundUser = usersRepository.findByEmailOrPassport(user.getEmail())
@@ -25,6 +25,6 @@ public class UsersService {
                 });
 
         log.debug("Authenticated user retrieved: {}", foundUser.getEmail());
-        return usersMapper.toUsersResponse(foundUser);
+        return userMapper.toUsersResponse(foundUser);
     }
 }

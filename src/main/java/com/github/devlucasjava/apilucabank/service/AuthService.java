@@ -8,6 +8,7 @@ import com.github.devlucasjava.apilucabank.dto.response.AuthResponse;
 import com.github.devlucasjava.apilucabank.exception.CustomAuthException;
 import com.github.devlucasjava.apilucabank.exception.InternalErrorServerException;
 import com.github.devlucasjava.apilucabank.exception.ResourceConflictException;
+import com.github.devlucasjava.apilucabank.model.Account;
 import com.github.devlucasjava.apilucabank.model.Role;
 import com.github.devlucasjava.apilucabank.model.Users;
 import com.github.devlucasjava.apilucabank.repository.RoleRepository;
@@ -20,6 +21,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,18 +34,11 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final AccountService accountService;
 
     public AuthResponse register(RegisterRequest request) {
 
-        if (usersRepository.findByEmail(request.getEmail()).isPresent()) {
-            log.warn("Registration failed: email already registered - {}", request.getEmail());
-            throw new ResourceConflictException("Email already registered");
-        }
-
-        if (usersRepository.findByPassport(request.getPassport()).isPresent()) {
-            log.warn("Registration failed: passport already registered - {}", request.getPassport());
-            throw new ResourceConflictException("Passport already registered");
-        }
+        validateUserRegistration(request);
 
         Role defaultRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> {
@@ -53,11 +50,22 @@ public class AuthService {
         user.setRole(defaultRole);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        usersRepository.save(user);
-        log.debug("New user registered: {}", user.getEmail());
+        Account account = Account.builder()
+                .user(user)
+                .balance(BigDecimal.ZERO)
+                .maxAmountTransaction(BigDecimal.valueOf(1000))
+                .isBlocked(false)
+                .blockedDate(null)
+                .transactionsList(List.of())
+                .build();
+        user.setAccount(account);
+        Users userSaved = usersRepository.save(user);
 
-        String token = jwtService.generateToken(user);
-        AuthResponse response = AuthMapper.toAuthResponse(user);
+        log.debug("New user registered: {}, Account ID: {}", user.getEmail(), user.getAccount().getId());
+
+        String token = jwtService.generateToken(userSaved);
+
+        AuthResponse response = AuthMapper.toAuthResponse(userSaved);
         response.setAccessToken(token);
         response.setExpiresIn(jwtService.jwtExpiration);
 
@@ -87,5 +95,18 @@ public class AuthService {
         response.setExpiresIn(jwtService.jwtExpiration);
 
         return response;
+    }
+
+
+    private void validateUserRegistration(RegisterRequest request) {
+
+        if (usersRepository.findByEmail(request.getEmail()).isPresent()) {
+            log.warn("Registration failed: email already registered - {}", request.getEmail());
+            throw new ResourceConflictException("Email already registered");
+        }
+        if (usersRepository.findByPassport(request.getPassport()).isPresent()) {
+            log.warn("Registration failed: passport already registered - {}", request.getPassport());
+            throw new ResourceConflictException("Passport already registered");
+        }
     }
 }

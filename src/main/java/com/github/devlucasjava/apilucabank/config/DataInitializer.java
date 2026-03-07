@@ -13,16 +13,15 @@ import java.util.List;
 
 // for create roles and authorities for developer
 
-//@Configuration
+@Configuration
 public class DataInitializer {
 
-    //@Bean
+    @Bean
     CommandLineRunner initData(RoleRepository roleRepository, AuthorityRepository authorityRepository) {
         return args -> {
 
-            // Criar authorities
             List<String> authorityNames = List.of(
-                    "MANAGE_USER", "READ", "WRITE",
+                    "MANAGE_USER", "ACCOUNT",
                     "CHAT_USER", "CHAT_ENTERPRISE",
                     "ADMIN_DELETE", "SEND_TRANSACTIONS",
                     "CANCEL_TRANSACTION", "MANAGE_TRANSACTION"
@@ -34,34 +33,28 @@ public class DataInitializer {
 
             authorityRepository.saveAll(authorities);
 
-            // Criar roles e atribuir authorities
             Role admin = Role.builder()
                     .name("ADMIN")
-                    .authorities(authorities) // ADMIN recebe todas
-                    .build();
-
-            Role superadmin = Role.builder()
-                    .name("SUPERADMIN")
-                    .authorities(authorities) // SUPERADMIN recebe todas
+                    .authorities(authorities)
                     .build();
 
             Role user = Role.builder()
                     .name("USER")
                     .authorities(authorities.stream()
-                            .filter(a -> List.of("READ", "WRITE", "CHAT_USER").contains(a.getName()))
+                            .filter(a -> List.of("ACCOUNT", "SEND_TRANSACTIONS", "CHAT_USER").contains(a.getName()))
                             .toList())
                     .build();
 
             Role enterprise = Role.builder()
                     .name("ENTERPRISE")
                     .authorities(authorities.stream()
-                            .filter(a -> List.of("READ", "WRITE", "CHAT_ENTERPRISE",
+                            .filter(a -> List.of("ACCOUNT", "CHAT_ENTERPRISE",
                                     "SEND_TRANSACTIONS", "CANCEL_TRANSACTION",
                                     "MANAGE_TRANSACTION").contains(a.getName()))
                             .toList())
                     .build();
 
-            roleRepository.saveAll(List.of(admin, superadmin, user, enterprise));
+            roleRepository.saveAll(List.of(admin, user, enterprise));
 
             System.out.println("Roles e Authorities inicializadas com sucesso!");
         };

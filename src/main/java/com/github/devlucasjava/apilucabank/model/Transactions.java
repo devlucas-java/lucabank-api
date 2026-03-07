@@ -10,7 +10,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +21,9 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "transaction_history")
 public class Transactions {
 
@@ -33,7 +39,7 @@ public class Transactions {
     @Column(updatable = false)
     private String description;
 
-    private String descriptionAdmin;
+    private String adminNote;
 
     @Column(nullable = false, updatable = false)
     private BigDecimal amount;

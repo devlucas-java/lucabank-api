@@ -1,4 +1,6 @@
 package com.github.devlucasjava.apilucabank.dto.response;
+import com.github.devlucasjava.apilucabank.model.StatusEnum;
+import com.github.devlucasjava.apilucabank.model.TypeTransaction;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,17 +41,17 @@ public class TransactionResponse {
 
     @Schema(description = "Transaction status", example = "COMPLETED",
             allowableValues = {"PENDING", "COMPLETED", "CANCELLED", "REJECTED"})
-    private String status;
+    private StatusEnum status;
 
     @Schema(description = "Transaction type", example = "TRANSFER",
             allowableValues = {"TRANSFER", "DEPOSIT", "WITHDRAW"})
-    private String typeTransaction;
+    private TypeTransaction typeTransaction;
 
     @Schema(description = "Sender account ID",
             example = "550e8400-e29b-41d4-a716-446655440000")
-    private UUID senderId;
+    private AccountSummaryResponse sender;
 
     @Schema(description = "Receiver account ID",
             example = "770e8400-e29b-41d4-a716-446655440000")
-    private UUID receiverId;
+    private AccountSummaryResponse receiver;
 }

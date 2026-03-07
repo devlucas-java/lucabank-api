@@ -7,16 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Request transaction")
-public class TransactionRequest {
+public class CreateTransactionRequest {
     @Schema(description = "Receiver account ID",
             example = "770e8400-e29b-41d4-a716-446655440000",
             requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "Receiver account ID is required")
-    private String receiverId;
+    private UUID receiverId;
 
     @Schema(description = "Transaction amount",
             example = "150.00",

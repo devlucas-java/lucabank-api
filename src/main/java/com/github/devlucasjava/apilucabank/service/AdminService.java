@@ -1,6 +1,6 @@
 package com.github.devlucasjava.apilucabank.service;
 
-import com.github.devlucasjava.apilucabank.dto.mapper.UsersMapper;
+import com.github.devlucasjava.apilucabank.dto.mapper.UserMapper;
 import com.github.devlucasjava.apilucabank.dto.request.UsersFilterRequest;
 import com.github.devlucasjava.apilucabank.dto.response.UsersResponse;
 import com.github.devlucasjava.apilucabank.model.Users;
@@ -23,7 +23,7 @@ public class AdminService {
     private static final int DEFAULT_PAGE_NUMBER = 0;
 
     private final UsersRepository usersRepository;
-    private final UsersMapper usersMapper;
+    private final UserMapper userMapper;
 
     public Page<UsersResponse> findUsers(UsersFilterRequest filter, Integer size, Integer page) {
         int pageSize = (size == null || size <= 0) ? DEFAULT_PAGE_SIZE : size;
@@ -36,7 +36,7 @@ public class AdminService {
         Page<Users> usersPage = usersRepository.findAll(spec, pageable);
 
         log.debug("Total users found: {}", usersPage.getTotalElements());
-        return usersPage.map(usersMapper::toUsersResponse);
+        return usersPage.map(userMapper::toUsersResponse);
     }
 
     private Specification<Users> buildSpecification(UsersFilterRequest filter) {
