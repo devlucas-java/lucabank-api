@@ -21,7 +21,6 @@ The project is already structured with security, validation, testing, and Docker
 | MapStructor                 | Implementation in Users        |
 | Actuator                    | Defalt                         |
 | Phrometheus                 | Metrics                        |
-| Grafana                     | Dashboard                      |
 | Spring Data JPA (Hibernate) | ORM                            |
 | PostgreSQL                  | Relational database            |
 | Bean Validation (@Valid)    | DTO validation                 |
