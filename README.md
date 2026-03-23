@@ -65,7 +65,7 @@ Validated request and response objects.
 - Easy to maintain and extend
 - Production-oriented structure
 
-> ⚠️ Note: The project uses a **layered architecture with clean code practices**, not a full Clean Architecture implementation.
+> ⚠️ Note: The project uses a **layered architecture with clean code practices**
 
 ---
 
